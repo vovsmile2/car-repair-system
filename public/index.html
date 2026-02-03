@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>汽车维修管理系统</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Microsoft YaHei', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .header h1 {
+      color: #667eea;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: #666;
+    }
+
+    .nav {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      flex: 1;
+      min-width: 150px;
+      padding: 15px 25px;
+      border: none;
+      border-radius: 10px;
+      background: white;
+      color: #667eea;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: bold;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      background: #667eea;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      display: none;
+    }
+
+    .card.active {
+      display: block;
+    }
+
+    .card h2 {
+      color: #333;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 3px solid #667eea;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: bold;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #666;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .table th,
+    .table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .table th {
+      background: #f8f9fa;
+      color: #667eea;
+      font-weight: bold;
+    }
+
+    .table tr:hover {
+      background: #f8f9fa;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .search-box input,
+    .search-box select {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .search-box button {
+      flex: 0 0 auto;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 25px;
+      border-radius: 10px;
+      color: white;
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .stat-card h3 {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: 10px;
+    }
+
+    .stat-card .value {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .stat-card .count {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    .alert {
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .alert.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .alert.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .alert.show {
+      display: block;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 50px 20px;
+      color: #999;
+    }
+
+    .empty-state svg {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+
+    #imagePreview img {
+      max-width: 150px;
+      max-height: 150px;
+      border-radius: 8px;
+      border: 2px solid #e0e0e0;
+      object-fit: cover;
+    }
+
+    #imagePreview .preview-item {
+      position: relative;
+      display: inline-block;
+    }
+
+    #imagePreview .remove-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: rgba(255, 0, 0, 0.7);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      font-size: 12px;
+      line-height: 20px;
+      text-align: center;
+    }
+
+    .thumbnail {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      cursor: pointer;
+      margin: 2px;
+    }
+
+    .thumbnail:hover {
+      border-color: #667eea;
+    }
+
+    @media (max-width: 768px) {
+      .nav {
+        flex-direction: column;
+      }
+
+      .nav-btn {
+        min-width: 100%;
+      }
+
+      .search-box {
+        flex-direction: column;
+      }
+
+      .search-box input,
+      .search-box select {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🚗 汽车维修管理系统</h1>
+      <p>简单易用的维修记录管理系统</p>
+    </div>
+
+    <div class="nav">
+      <button class="nav-btn active" onclick="showCard('addVehicle')">添加车辆</button>
+      <button class="nav-btn" onclick="showCard('addRecord')">添加维修记录</button>
+      <button class="nav-btn" onclick="showCard('searchVehicle')">查询车辆</button>
+      <button class="nav-btn" onclick="showCard('search')">查询维修</button>
+      <button class="nav-btn" onclick="showCard('stats')">收入统计</button>
+    </div>
+
+    <div id="alert" class="alert"></div>
+
+    <!-- 添加车辆 -->
+    <div id="addVehicle" class="card active">
+      <h2>添加新车辆</h2>
+      <form onsubmit="addVehicle(event)">
+        <div class="form-group">
+          <label>车牌号 *</label>
+          <input type="text" id="vehiclePlate" required placeholder="例如：粤B12345">
+        </div>
+        <div class="form-group">
+          <label>车型 *</label>
+          <input type="text" id="vehicleModel" required placeholder="例如：丰田卡罗拉">
+        </div>
+        <div class="form-group">
+          <label>车主姓名 *</label>
+          <input type="text" id="vehicleOwner" required placeholder="例如：张三">
+        </div>
+        <div class="form-group">
+          <label>联系电话 *</label>
+          <input type="tel" id="vehiclePhone" required placeholder="例如：13800138000">
+        </div>
+        <div class="form-group">
+          <label>备注</label>
+          <textarea id="vehicleNote" placeholder="选填"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">保存车辆信息</button>
+      </form>
+    </div>
+
+    <!-- 添加维修记录 -->
+    <div id="addRecord" class="card">
+      <h2>添加维修记录</h2>
+      <form onsubmit="addRecord(event)">
+        <div class="form-group">
+          <label>车牌号 *</label>
+          <input type="text" id="recordPlate" required placeholder="例如：粤B12345">
+        </div>
+        <div class="form-group">
+          <label>维修部位 *</label>
+          <input type="text" id="recordPart" required placeholder="例如：发动机">
+        </div>
+        <div class="form-group">
+          <label>维修内容 *</label>
+          <textarea id="recordContent" required placeholder="详细描述维修内容"></textarea>
+        </div>
+        <div class="form-group">
+          <label>维修费用 (元) *</label>
+          <input type="number" id="recordCost" required min="0" step="0.01" placeholder="例如：500.00">
+        </div>
+        <div class="form-group">
+          <label>上传照片（可选，可多选）</label>
+          <input type="file" id="recordImages" accept="image/*" multiple onchange="previewImages(this)">
+          <div id="imagePreview" style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 10px;"></div>
+        </div>
+        <div class="form-group">
+          <label>备注</label>
+          <textarea id="recordNote" placeholder="选填"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">保存维修记录</button>
+      </form>
+    </div>
+
+    <!-- 查询车辆 -->
+    <div id="searchVehicle" class="card">
+      <h2>查询车辆信息</h2>
+      <div class="search-box">
+        <input type="text" id="searchVehiclePlate" placeholder="输入车牌号（支持模糊搜索）">
+      </div>
+      <div class="form-group" style="margin-top: 15px;">
+        <label style="display: inline-block; margin-right: 10px; font-weight: normal;">
+          <input type="checkbox" id="searchVehicleFuzzy" checked style="width: auto; margin-right: 5px;">
+          模糊搜索（车牌号包含关键字即可）
+        </label>
+      </div>
+      <div class="search-box" style="margin-top: 15px;">
+        <button class="btn btn-primary" onclick="searchVehicles()">查询</button>
+        <button class="btn btn-secondary" onclick="clearVehicleSearch()">清空</button>
+      </div>
+      <div id="vehicleSearchResults"></div>
+    </div>
+
+    <!-- 查询维修记录 -->
+    <div id="search" class="card">
+      <h2>查询维修记录</h2>
+      <div class="search-box">
+        <input type="text" id="searchPlate" placeholder="输入车牌号（支持模糊搜索）">
+        <input type="date" id="searchStartDate">
+        <input type="date" id="searchEndDate">
+      </div>
+      <div class="form-group" style="margin-top: 15px;">
+        <label style="display: inline-block; margin-right: 10px; font-weight: normal;">
+          <input type="checkbox" id="fuzzySearch" checked style="width: auto; margin-right: 5px;">
+          模糊搜索（车牌号包含关键字即可）
+        </label>
+      </div>
+      <div class="search-box" style="margin-top: 15px;">
+        <button class="btn btn-primary" onclick="searchRecords()">查询</button>
+        <button class="btn btn-secondary" onclick="clearSearch()">清空</button>
+      </div>
+      <div id="searchResults"></div>
+    </div>
+
+    <!-- 收入统计 -->
+    <div id="stats" class="card">
+      <h2>收入统计</h2>
+      <div class="search-box">
+        <select id="statsYear" onchange="loadStats()">
+          <option value="">全部年份</option>
+        </select>
+      </div>
+      <div id="statsResults" class="stats-grid"></div>
+    </div>
+  </div>
+
+  <script>
+    // 显示卡片
+    function showCard(id) {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+      hideAlert();
+    }
+
+    // 显示提示
+    function showAlert(message, type = 'success') {
+      const alert = document.getElementById('alert');
+      alert.textContent = message;
+      alert.className = `alert ${type} show`;
+      setTimeout(() => {
+        alert.classList.remove('show');
+      }, 3000);
+    }
+
+    function hideAlert() {
+      document.getElementById('alert').classList.remove('show');
+    }
+
+    // 添加车辆
+    async function addVehicle(event) {
+      event.preventDefault();
+
+      const data = {
+        plate: document.getElementById('vehiclePlate').value.toUpperCase(),
+        model: document.getElementById('vehicleModel').value,
+        owner: document.getElementById('vehicleOwner').value,
+        phone: document.getElementById('vehiclePhone').value,
+        note: document.getElementById('vehicleNote').value
+      };
+
+      try {
+        const response = await fetch('/api/vehicles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showAlert('车辆添加成功！');
+          document.getElementById('vehiclePlate').value = '';
+          document.getElementById('vehicleModel').value = '';
+          document.getElementById('vehicleOwner').value = '';
+          document.getElementById('vehiclePhone').value = '';
+          document.getElementById('vehicleNote').value = '';
+        } else {
+          showAlert(result.message, 'error');
+        }
+      } catch (error) {
+        showAlert('操作失败，请重试', 'error');
+      }
+    }
+
+    // 添加维修记录
+    async function addRecord(event) {
+      event.preventDefault();
+
+      const data = {
+        plate: document.getElementById('recordPlate').value.toUpperCase(),
+        part: document.getElementById('recordPart').value,
+        content: document.getElementById('recordContent').value,
+        cost: document.getElementById('recordCost').value,
+        note: document.getElementById('recordNote').value
+      };
+
+      // 处理图片上传（支持多图）
+      const fileInput = document.getElementById('recordImages');
+      const files = fileInput.files;
+
+      if (files.length > 0) {
+        data.images = [];
+        let processedCount = 0;
+
+        for (let i = 0; i < files.length; i++) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            data.images.push(e.target.result);
+            processedCount++;
+
+            if (processedCount === files.length) {
+              sendRecord(data);
+            }
+          };
+          reader.readAsDataURL(files[i]);
+        }
+      } else {
+        sendRecord(data);
+      }
+    }
+
+    // 发送维修记录到服务器
+    async function sendRecord(data) {
+      try {
+        const response = await fetch('/api/records', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showAlert('维修记录添加成功！');
+          document.getElementById('recordPlate').value = '';
+          document.getElementById('recordPart').value = '';
+          document.getElementById('recordContent').value = '';
+          document.getElementById('recordCost').value = '';
+          document.getElementById('recordNote').value = '';
+          document.getElementById('recordImages').value = '';
+          document.getElementById('imagePreview').innerHTML = '';
+        } else {
+          showAlert(result.message, 'error');
+        }
+      } catch (error) {
+        showAlert('操作失败，请重试', 'error');
+      }
+    }
+
+    // 图片预览（支持多图）
+    function previewImages(input) {
+      const preview = document.getElementById('imagePreview');
+      preview.innerHTML = '';
+
+      const files = input.files;
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+          const div = document.createElement('div');
+          div.className = 'preview-item';
+          div.innerHTML = `
+            <img src="${e.target.result}" alt="预览">
+          `;
+          preview.appendChild(div);
+        };
+
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // 查询记录
+    async function searchRecords() {
+      const plate = document.getElementById('searchPlate').value.toUpperCase();
+      const startDate = document.getElementById('searchStartDate').value;
+      const endDate = document.getElementById('searchEndDate').value;
+      const fuzzy = document.getElementById('fuzzySearch').checked;
+
+      const params = new URLSearchParams();
+      if (plate) params.append('plate', plate);
+      if (startDate) params.append('startDate', startDate);
+      if (endDate) params.append('endDate', endDate);
+      if (fuzzy && plate) params.append('fuzzy', 'true');
+
+      try {
+        const response = await fetch(`/api/records?${params}`);
+        const result = await response.json();
+
+        if (result.success) {
+          displayRecords(result.records);
+        } else {
+          showAlert(result.message || '查询失败', 'error');
+        }
+      } catch (error) {
+        console.error('查询错误:', error);
+        showAlert('查询失败：' + error.message, 'error');
+      }
+    }
+
+    // 显示查询结果
+    function displayRecords(records) {
+      const container = document.getElementById('searchResults');
+
+      if (records.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+            <p>暂无记录</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '<table class="table"><thead><tr><th>日期</th><th>车牌</th><th>维修部位</th><th>内容</th><th>费用</th><th>照片</th></tr></thead><tbody>';
+
+      records.forEach(r => {
+        let imageCell = '<td>-</td>';
+
+        if (r.imagePaths && r.imagePaths.length > 0) {
+          const thumbnails = r.imagePaths.map(path =>
+            `<a href="${path}" target="_blank"><img src="${path}" class="thumbnail" alt="照片"></a>`
+          ).join('');
+          imageCell = `<td>${thumbnails}</td>`;
+        } else if (r.imagePath) {
+          imageCell = `<td><a href="${r.imagePath}" target="_blank"><img src="${r.imagePath}" class="thumbnail" alt="照片"></a></td>`;
+        }
+
+        html += `
+          <tr>
+            <td>${r.date}</td>
+            <td>${r.plate}</td>
+            <td>${r.part}</td>
+            <td>${r.content}</td>
+            <td>¥${parseFloat(r.cost).toFixed(2)}</td>
+            ${imageCell}
+          </tr>
+        `;
+      });
+
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    // 清空查询
+    function clearSearch() {
+      document.getElementById('searchPlate').value = '';
+      document.getElementById('searchStartDate').value = '';
+      document.getElementById('searchEndDate').value = '';
+      document.getElementById('fuzzySearch').checked = true;
+      document.getElementById('searchResults').innerHTML = '';
+    }
+
+    // 加载统计数据
+    async function loadStats() {
+      const year = document.getElementById('statsYear').value;
+
+      try {
+        const response = await fetch(`/api/stats/monthly?${year ? `year=${year}` : ''}`);
+        const result = await response.json();
+
+        if (result.success) {
+          displayStats(result.stats);
+        }
+      } catch (error) {
+        showAlert('加载失败，请重试', 'error');
+      }
+    }
+
+    // 显示统计数据
+    function displayStats(stats) {
+      const container = document.getElementById('statsResults');
+
+      if (stats.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+            </svg>
+            <p>暂无数据</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      stats.forEach(s => {
+        html += `
+          <div class="stat-card">
+            <h3>${s.month}</h3>
+            <div class="value">¥${s.total}</div>
+            <div class="count">${s.count} 笔维修</div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // 初始化年份选项
+    function initYearOptions() {
+      const currentYear = new Date().getFullYear();
+      const select = document.getElementById('statsYear');
+
+      for (let i = currentYear; i >= currentYear - 5; i--) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = `${i}年`;
+        select.appendChild(option);
+      }
+    }
+
+    // 查询车辆
+    async function searchVehicles() {
+      const plate = document.getElementById('searchVehiclePlate').value.toUpperCase();
+      const fuzzy = document.getElementById('searchVehicleFuzzy').checked;
+
+      if (!plate) {
+        showAlert('请输入车牌号', 'error');
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/vehicles');
+        const result = await response.json();
+
+        if (result.success) {
+          let filtered = result.vehicles;
+
+          if (fuzzy) {
+            filtered = filtered.filter(v => v.plate.includes(plate));
+          } else {
+            filtered = filtered.filter(v => v.plate === plate);
+          }
+
+          displayVehicles(filtered);
+        }
+      } catch (error) {
+        showAlert('查询失败，请重试', 'error');
+      }
+    }
+
+    // 显示查询结果（车辆）
+    function displayVehicles(vehicles) {
+      const container = document.getElementById('vehicleSearchResults');
+
+      if (vehicles.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+            <p>暂无记录</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '<table class="table"><thead><tr><th>车牌号</th><th>车型</th><th>车主</th><th>电话</th><th>注册日期</th><th>备注</th></tr></thead><tbody>';
+
+      vehicles.forEach(v => {
+        html += `
+          <tr>
+            <td><strong>${v.plate}</strong></td>
+            <td>${v.model}</td>
+            <td>${v.owner}</td>
+            <td>${v.phone}</td>
+            <td>${v.firstDate}</td>
+            <td>${v.note || '-'}</td>
+          </tr>
+        `;
+      });
+
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    // 清空车辆查询
+    function clearVehicleSearch() {
+      document.getElementById('searchVehiclePlate').value = '';
+      document.getElementById('searchVehicleFuzzy').checked = true;
+      document.getElementById('vehicleSearchResults').innerHTML = '';
+    }
+
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      initYearOptions();
+      loadStats();
+    });
+  </script>
+</body>
+</html>

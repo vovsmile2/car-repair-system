@@ -1,0 +1,65 @@
+[
+  {
+    "plate": "粤B12345",
+    "part": "前盖",
+    "content": "前盖翻新",
+    "cost": "500",
+    "note": "",
+    "date": "2026-02-03"
+  },
+  {
+    "plate": "粤B12345",
+    "part": "叶子板",
+    "content": "叶子板喷漆",
+    "cost": "800",
+    "note": "",
+    "date": "2026-02-03",
+    "imagePath": "/photos/粤B12345_1770084971857.jpg"
+  },
+  {
+    "plate": "粤BB933N",
+    "part": "前盖",
+    "content": "喷漆",
+    "cost": "300",
+    "note": "",
+    "date": "2026-02-03",
+    "imagePaths": [
+      "/photos/粤BB933N_1770086468678_0.jpg",
+      "/photos/粤BB933N_1770086468680_1.jpg"
+    ]
+  },
+  {
+    "plate": "粤BB933N",
+    "part": "玻璃升降器",
+    "content": "玻璃升降器更换",
+    "cost": "80",
+    "note": "",
+    "date": "2026-02-03",
+    "imagePaths": [
+      "/photos/粤BB933N_1770086671528_0.jpg"
+    ]
+  },
+  {
+    "plate": "粤B12345",
+    "part": "轮胎",
+    "content": "轮胎更换",
+    "cost": "800",
+    "note": "",
+    "date": "2026-02-03",
+    "imagePaths": [
+      "/photos/粤B12345_1770087170412_0.jpg"
+    ]
+  },
+  {
+    "plate": "粤B6666",
+    "part": "前盖",
+    "content": "喷漆",
+    "cost": "600",
+    "note": "",
+    "date": "2026-02-03",
+    "imagePaths": [
+      "/photos/粤B6666_1770091410766_0.jpg",
+      "/photos/粤B6666_1770091410770_1.jpg"
+    ]
+  }
+]
